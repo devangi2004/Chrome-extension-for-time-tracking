@@ -53,8 +53,11 @@ node index.js
 In Chrome:
 
 Go to chrome://extensions
+
 Enable Developer Mode
+
 Click Load Unpacked
+
 Select the extension folder
 
 ---
