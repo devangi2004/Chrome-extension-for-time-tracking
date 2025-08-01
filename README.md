@@ -120,6 +120,7 @@ This project is licensed under the [MIT License](LICENSE).
 
 **Devangi Inani**
 👩‍🎓 CSE Final Year @ Government Women's Engineering College, Ajmer
+
 🎨 Full Stack Web Development Intern @ CodeTech
 
 ---
