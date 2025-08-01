@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Productivity Dashboard</title>
+  <link rel="stylesheet" href="/extension/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      query,
+      where
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBTEKu-vMwQbiJp_LQfSPkvtPbnr4p6obY",
+      authDomain: "chrome-extension-time-tracker.firebaseapp.com",
+      projectId: "chrome-extension-time-tracker",
+      storageBucket: "chrome-extension-time-tracker.appspot.com",
+      messagingSenderId: "698262129397",
+      appId: "1:698262129397:web:6e72588a312db81dd1d3bc",
+      measurementId: "G-B37RXEX720"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const ctx = document.getElementById('chart').getContext('2d');
+
+    // Chart placeholder
+    let chart;
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const data = await getUserData(user.email);
+        renderChart(data);
+      } else {
+        alert("Please login first.");
+        window.location.href = "popup.html";
+      }
+    });
+
+    async function getUserData(email) {
+      try {
+        const q = query(collection(db, "tracking"), where("email", "==", email));
+        const querySnapshot = await getDocs(q);
+
+        const weeklyData = {
+          Monday: 0,
+          Tuesday: 0,
+          Wednesday: 0,
+          Thursday: 0,
+          Friday: 0,
+          Saturday: 0,
+          Sunday: 0
+        };
+
+        querySnapshot.forEach(doc => {
+          const data = doc.data();
+          const day = data.day;
+          const minutes = data.minutesSpent;
+          if (weeklyData[day] !== undefined) {
+            weeklyData[day] += minutes;
+          }
+        });
+
+        return weeklyData;
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        return {
+          Monday: 20,
+          Tuesday: 30,
+          Wednesday: 25,
+          Thursday: 15,
+          Friday: 35,
+          Saturday: 40,
+          Sunday: 10
+        };
+      }
+    }
+
+    function renderChart(data) {
+      const labels = Object.keys(data);
+      const values = Object.values(data);
+
+      chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Minutes Spent',
+            data: values,
+            backgroundColor: 'rgba(75, 192, 192, 0.7)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+  </script>
+</head>
+<body>
+  <h2>📊 Weekly Productivity Report</h2>
+  <canvas id="chart" width="400" height="200"></canvas>
+</body>
+</html>

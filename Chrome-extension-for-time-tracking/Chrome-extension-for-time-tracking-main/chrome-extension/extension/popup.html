@@ -1,0 +1,42 @@
+
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Time Tracker Extension</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <h2>⏰ Time Tracker</h2>
+  <h3>Login / Register</h3>
+
+  <input type="text" id="username" placeholder="Username (for registration)" />
+  <input type="email" id="email" placeholder="Email" />
+  <input type="password" id="password" placeholder="Password" />
+  <button id="registerBtn">Register</button>
+  <button id="loginBtn">Login</button>
+  <button id="logoutBtn">Logout</button>
+
+  <div id="status"></div>
+
+  <div id="upload-section">
+    <p id="user-info"></p>
+    <textarea id="trackingData" rows="4" placeholder="Enter tracking data..."></textarea>
+    <button id="uploadBtn">Upload</button>
+    <div id="upload-status"></div>
+
+    <h4>Tracked Sites:</h4>
+    <ul id="timeList"></ul>
+  </div>
+
+  <!-- Dashboard Link -->
+  <a href="dashboard.html" target="_blank">Open Dashboard</a>
+
+  <!-- Load the main JS logic -->
+  <script type="module" src="popup.js"></script>
+
+  <script src="firebase/firebase-app-compat.js"></script>
+  <script src="firebase/firebase-auth-compat.js"></script>
+  <script src="firebase-config.js"></script>
+
+</body>
+</html>
